@@ -24,6 +24,7 @@ export const ImageList = ({imageData, navigation}: ImageListProps) => {
   return (
     <FlatList
       data={imageData}
+      extraData={imageData}
       numColumns={COLUMN_COUNT}
       renderItem={({item}) =>
         item.data.url.slice(-3) != 'gif' && !item.data.is_video ? (

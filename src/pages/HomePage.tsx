@@ -1,9 +1,21 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, View, ActivityIndicator} from 'react-native';
+import {
+  SafeAreaView,
+  View,
+  ActivityIndicator,
+  TextInput,
+  Text,
+} from 'react-native';
 import {ImageList} from '../components/ImageList';
-import {HEADER_BACKGROUND_COLOR, KEYWORD_TO_GET} from '../constants/constants';
+import {
+  HEADER_BACKGROUND_COLOR,
+  KEYWORD_TO_GET,
+  windowHeight,
+} from '../constants/constants';
 import {getImages} from '../service/images';
-import {Image, ImageResponse} from '../service/types/images';
+import {TypedUseSelectorHook, useSelector, useDispatch} from 'react-redux';
+import {setImages} from '../store/slices/imagesSlices';
+import {RootState} from '../store/store';
 
 export const HomePage = ({navigation}: any) => {
   useEffect(() => {
@@ -13,20 +25,44 @@ export const HomePage = ({navigation}: any) => {
       headerStyle: {
         backgroundColor: HEADER_BACKGROUND_COLOR,
       },
-      headerTitle: KEYWORD_TO_GET.toUpperCase(),
-      headerTitleStyle: {
-        color: 'white',
-        fontSize: 20,
-        fontWeight: 'bold',
-      },
+      headerTitle: (props: any) => (
+        <View
+          style={{
+            backgroundColor: 'transparent',
+            width: '100%',
+            borderTopRightRadius: 10,
+            borderTopLeftRadius: 10,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
+            {KEYWORD_TO_GET.toUpperCase()}
+          </Text>
+          <TextInput
+            editable
+            placeholder="Search Images"
+            placeholderTextColor={'#ffffff'}
+            maxLength={200}
+            onChangeText={text => onSearchTextChange(text)}
+            value={searchText}
+            style={{padding: 10}}
+          />
+        </View>
+      ),
     });
   }, []);
 
-  const [imageData, setImageData] = useState<Image[]>();
-  const [fetching, setFetching] = useState(false);
+  const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+  const imagesData = useAppSelector(state => state.images.listData);
+  const dispatch = useDispatch();
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
-    setFetching(true);
+    getImageData();
+  }, []);
+
+  const getImageData = () => {
+    dispatch(setImages({...imagesData, loading: true}));
     getImages(KEYWORD_TO_GET).then(response => {
       const filteredData = response.children.filter(item => {
         return (
@@ -35,21 +71,36 @@ export const HomePage = ({navigation}: any) => {
           !item.data.is_video
         );
       });
-
-      setImageData(filteredData);
-      setFetching(false);
+      dispatch(
+        setImages({...imagesData, images: filteredData, loading: false}),
+      );
     });
-  }, []);
-
+  };
+  // when user enter text in search box, every item will be evaluated by their item.data.title property
+  const onSearchTextChange = (text: string) => {
+    if (text && text != '') {
+      setSearchText(text);
+      const filteredData = imagesData.images.filter(item => {
+        return item.data.title.toLowerCase().includes(text.toLowerCase());
+      });
+      dispatch(setImages({...imagesData, images: filteredData}));
+    } else {
+      setSearchText('');
+      getImageData();
+    }
+  };
   return (
     <SafeAreaView>
-      <View style={{alignItems: 'center', justifyContent: 'center'}}>
-        {fetching ? (
-          <ActivityIndicator size="large" />
+      <View>
+        {imagesData.loading ? (
+          <View style={{marginTop: windowHeight / 2}}>
+            <ActivityIndicator size="large" />
+          </View>
         ) : (
-          <ImageList imageData={imageData as Image[]} navigation={navigation} />
+          <ImageList imageData={imagesData.images} navigation={navigation} />
         )}
       </View>
+      <View style={{height: 10}}></View>
     </SafeAreaView>
   );
 };
