@@ -18,7 +18,11 @@ import {setImages} from '../store/slices/imagesSlices';
 import {RootState} from '../store/store';
 import {HomeHeader} from '../components/homeHeader';
 
+const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+
 export const HomePage = ({navigation}: any) => {
+  const imagesData = useAppSelector(state => state.images.listData);
+
   useEffect(() => {
     navigation.setOptions({
       headerShown: true,
@@ -28,10 +32,8 @@ export const HomePage = ({navigation}: any) => {
       },
       headerTitle: () => <HomeHeader onChangeText={onSearchTextChange} />,
     });
-  }, []);
+  }, [imagesData]);
 
-  const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
-  const imagesData = useAppSelector(state => state.images.listData);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -56,7 +58,6 @@ export const HomePage = ({navigation}: any) => {
 
   const onSearchTextChange = (text: string) => {
     if (!(!text || 0 === text.length)) {
-      dispatch(setImages({...imagesData, loading: true}));
       const filteredData = imagesData.images.filter(item => {
         return item.data.title.toLowerCase().includes(text.toLowerCase());
       });
