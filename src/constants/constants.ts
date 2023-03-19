@@ -14,4 +14,4 @@ export const IMAGE_ITEM_HEIGHT = windowWidth / COLUMN_COUNT - 10;
 export const IMAGE_WIDTH = windowWidth;
 export const IMAGE_HEIGHT = windowHeight;
 
-export const KEYWORD_TO_GET = 'image';
+export const KEYWORD_TO_GET = 'memes';
