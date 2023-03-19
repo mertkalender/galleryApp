@@ -25,7 +25,7 @@ export const HomePage = ({navigation}: any) => {
       headerStyle: {
         backgroundColor: HEADER_BACKGROUND_COLOR,
       },
-      headerTitle: (props: any) => (
+      headerTitle: () => (
         <View
           style={{
             backgroundColor: 'transparent',
@@ -44,8 +44,7 @@ export const HomePage = ({navigation}: any) => {
             placeholderTextColor={'#ffffff'}
             maxLength={200}
             onChangeText={text => onSearchTextChange(text)}
-            value={searchText}
-            style={{padding: 10}}
+            style={{padding: 10, marginLeft: 20}}
           />
         </View>
       ),
@@ -55,7 +54,6 @@ export const HomePage = ({navigation}: any) => {
   const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
   const imagesData = useAppSelector(state => state.images.listData);
   const dispatch = useDispatch();
-  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     getImageData();
@@ -78,14 +76,12 @@ export const HomePage = ({navigation}: any) => {
   };
   // when user enter text in search box, every item will be evaluated by their item.data.title property
   const onSearchTextChange = (text: string) => {
-    if (text && text != '') {
-      setSearchText(text);
+    if (!(!text || 0 === text.length)) {
       const filteredData = imagesData.images.filter(item => {
         return item.data.title.toLowerCase().includes(text.toLowerCase());
       });
       dispatch(setImages({...imagesData, images: filteredData}));
     } else {
-      setSearchText('');
       getImageData();
     }
   };
@@ -100,7 +96,6 @@ export const HomePage = ({navigation}: any) => {
           <ImageList imageData={imagesData.images} navigation={navigation} />
         )}
       </View>
-      <View style={{height: 10}}></View>
     </SafeAreaView>
   );
 };
