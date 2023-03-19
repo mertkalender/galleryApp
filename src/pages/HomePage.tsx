@@ -6,19 +6,21 @@ import {getImages} from '../service/images';
 import {Image, ImageResponse} from '../service/types/images';
 
 export const HomePage = ({navigation}: any) => {
-  navigation.setOptions({
-    headerShown: true,
-    headerTransparent: true,
-    headerStyle: {
-      backgroundColor: 'rgba(52, 52, 52, 0.2)',
-    },
-    headerTitle: KEYWORD_TO_GET.toUpperCase(),
-    headerTitleStyle: {
-      color: 'gray',
-      fontSize: 20,
-      fontWeight: 'bold',
-    },
-  });
+  useEffect(() => {
+    navigation.setOptions({
+      headerShown: true,
+      headerTransparent: true,
+      headerStyle: {
+        backgroundColor: 'rgba(52, 52, 52, 0.45)',
+      },
+      headerTitle: KEYWORD_TO_GET.toUpperCase(),
+      headerTitleStyle: {
+        color: 'white',
+        fontSize: 20,
+        fontWeight: 'bold',
+      },
+    });
+  }, []);
 
   const [imageData, setImageData] = useState<Image[]>();
   const [fetching, setFetching] = useState(false);
@@ -26,9 +28,6 @@ export const HomePage = ({navigation}: any) => {
   useEffect(() => {
     setFetching(true);
     getImages(KEYWORD_TO_GET).then(response => {
-      response.children.forEach(item => {
-        console.log(item.data.url.slice(-3));
-      });
       const filteredData = response.children.filter(item => {
         return (
           (item.data.url.slice(-3) === 'jpg' ||
@@ -45,20 +44,11 @@ export const HomePage = ({navigation}: any) => {
   return (
     <SafeAreaView>
       <View style={{alignItems: 'center', justifyContent: 'center'}}>
-        {
-          fetching ? (
-            <ActivityIndicator size="large" />
-          ) : (
-            <ImageList
-              imageData={imageData as Image[]}
-              navigation={navigation}
-            />
-          )
-          // <Button
-          //   title="Go to Image Details"
-          //   onPress={() => navigation.navigate('ImageDetails', {name: 'Jane'})}
-          // />
-        }
+        {fetching ? (
+          <ActivityIndicator size="large" />
+        ) : (
+          <ImageList imageData={imageData as Image[]} navigation={navigation} />
+        )}
       </View>
     </SafeAreaView>
   );
