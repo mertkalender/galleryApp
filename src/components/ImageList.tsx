@@ -8,7 +8,11 @@ import {
   Touchable,
   TouchableOpacity,
 } from 'react-native';
-import {COLUMN_COUNT, IMAGE_HEIGHT, IMAGE_WIDTH} from '../constants/constants';
+import {
+  COLUMN_COUNT,
+  IMAGE_ITEM_HEIGHT,
+  IMAGE_ITEM_WIDTH,
+} from '../constants/constants';
 import {Image as ImageType} from '../service/types/images';
 
 export type ImageListProps = {
@@ -29,8 +33,13 @@ export const ImageList = ({imageData, navigation}: ImageListProps) => {
                 navigation.navigate('ImageDetails', {imageDetails: item.data})
               }>
               <Image
+                resizeMode="cover"
                 source={{uri: item.data.url}}
-                style={{width: IMAGE_WIDTH, height: IMAGE_HEIGHT, margin: '1%'}}
+                style={{
+                  width: IMAGE_ITEM_WIDTH,
+                  height: IMAGE_ITEM_HEIGHT,
+                  margin: '1%',
+                }}
               />
             </TouchableOpacity>
           </View>

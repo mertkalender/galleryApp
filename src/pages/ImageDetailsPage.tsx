@@ -1,6 +1,7 @@
-import {useEffect} from 'react';
-import {SafeAreaView, ScrollView, View} from 'react-native';
-import {ImageData} from '../service/types/images';
+import React, {useEffect} from 'react';
+import {Image, SafeAreaView, View} from 'react-native';
+import SwipeUpDown from 'react-native-swipe-up-down';
+import {IMAGE_HEIGHT, IMAGE_WIDTH} from '../constants/constants';
 
 export const ImageDetailsPage = ({route, navigation}: any) => {
   useEffect(() => {
@@ -8,7 +9,7 @@ export const ImageDetailsPage = ({route, navigation}: any) => {
       headerShown: true,
       headerTransparent: true,
       headerStyle: {
-        backgroundColor: 'rgba(52, 52, 52, 0.45)',
+        backgroundColor: 'rgba(30, 30, 30, 0.45)',
       },
       headerTitle: 'Image Details',
       headerTitleStyle: {
@@ -23,9 +24,16 @@ export const ImageDetailsPage = ({route, navigation}: any) => {
 
   return (
     <SafeAreaView>
-      <ScrollView contentInsetAdjustmentBehavior="automatic">
-        <View></View>
-      </ScrollView>
+      <View style={{alignItems: 'center', justifyContent: 'center'}}>
+        <Image
+          source={{uri: imageDetails.url}}
+          style={{
+            resizeMode: 'contain',
+            width: IMAGE_WIDTH,
+            height: IMAGE_HEIGHT,
+          }}
+        />
+      </View>
     </SafeAreaView>
   );
 };

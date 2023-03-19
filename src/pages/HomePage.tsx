@@ -11,7 +11,7 @@ export const HomePage = ({navigation}: any) => {
       headerShown: true,
       headerTransparent: true,
       headerStyle: {
-        backgroundColor: 'rgba(52, 52, 52, 0.45)',
+        backgroundColor: 'rgba(30, 30, 30, 0.45)',
       },
       headerTitle: KEYWORD_TO_GET.toUpperCase(),
       headerTitleStyle: {
