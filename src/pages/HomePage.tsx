@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView, View, ActivityIndicator} from 'react-native';
 import {ImageList} from '../components/ImageList';
-import {KEYWORD_TO_GET} from '../constants/constants';
+import {HEADER_BACKGROUND_COLOR, KEYWORD_TO_GET} from '../constants/constants';
 import {getImages} from '../service/images';
 import {Image, ImageResponse} from '../service/types/images';
 
@@ -11,7 +11,7 @@ export const HomePage = ({navigation}: any) => {
       headerShown: true,
       headerTransparent: true,
       headerStyle: {
-        backgroundColor: 'rgba(30, 30, 30, 0.45)',
+        backgroundColor: HEADER_BACKGROUND_COLOR,
       },
       headerTitle: KEYWORD_TO_GET.toUpperCase(),
       headerTitleStyle: {

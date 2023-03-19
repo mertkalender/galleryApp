@@ -1,7 +1,12 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, SafeAreaView, View} from 'react-native';
 import SwipeUpDown from 'react-native-swipe-up-down';
-import {IMAGE_HEIGHT, IMAGE_WIDTH} from '../constants/constants';
+import {ImageDetail} from '../components/imageDetail';
+import {
+  HEADER_BACKGROUND_COLOR,
+  IMAGE_HEIGHT,
+  IMAGE_WIDTH,
+} from '../constants/constants';
 
 export const ImageDetailsPage = ({route, navigation}: any) => {
   useEffect(() => {
@@ -9,7 +14,7 @@ export const ImageDetailsPage = ({route, navigation}: any) => {
       headerShown: true,
       headerTransparent: true,
       headerStyle: {
-        backgroundColor: 'rgba(30, 30, 30, 0.45)',
+        backgroundColor: HEADER_BACKGROUND_COLOR,
       },
       headerTitle: 'Image Details',
       headerTitleStyle: {
@@ -21,6 +26,9 @@ export const ImageDetailsPage = ({route, navigation}: any) => {
   }, []);
 
   const {imageDetails} = route.params;
+  const [modalBackgroundColor, setModalBackgroundColor] = useState(
+    'rgba(30, 30, 30, 0)',
+  );
 
   return (
     <SafeAreaView>
@@ -32,6 +40,19 @@ export const ImageDetailsPage = ({route, navigation}: any) => {
             width: IMAGE_WIDTH,
             height: IMAGE_HEIGHT,
           }}
+        />
+        <SwipeUpDown
+          itemMini={(show: any) => <></>}
+          itemFull={(hide: any) => <ImageDetail imageData={imageDetails} />}
+          onShowMini={() => setModalBackgroundColor('rgba(30, 30, 30, 0)')}
+          onShowFull={() => setModalBackgroundColor('rgba(30, 30, 30, 0.8)')}
+          animation="spring"
+          extraMarginTop={200}
+          iconColor="white"
+          iconSize={40}
+          style={{backgroundColor: modalBackgroundColor}} // style for swipe
+          swipeHeight={200}
+          disableSwipeIcon
         />
       </View>
     </SafeAreaView>
