@@ -16,6 +16,7 @@ import {getImages} from '../service/images';
 import {TypedUseSelectorHook, useSelector, useDispatch} from 'react-redux';
 import {setImages} from '../store/slices/imagesSlices';
 import {RootState} from '../store/store';
+import {HomeHeader} from '../components/homeHeader';
 
 export const HomePage = ({navigation}: any) => {
   useEffect(() => {
@@ -25,29 +26,7 @@ export const HomePage = ({navigation}: any) => {
       headerStyle: {
         backgroundColor: HEADER_BACKGROUND_COLOR,
       },
-      headerTitle: () => (
-        <View
-          style={{
-            backgroundColor: 'transparent',
-            width: '100%',
-            borderTopRightRadius: 10,
-            borderTopLeftRadius: 10,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-          <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold'}}>
-            {KEYWORD_TO_GET.toUpperCase()}
-          </Text>
-          <TextInput
-            editable
-            placeholder="Search Images"
-            placeholderTextColor={'#ffffff'}
-            maxLength={200}
-            onChangeText={text => onSearchTextChange(text)}
-            style={{padding: 10, marginLeft: 20}}
-          />
-        </View>
-      ),
+      headerTitle: () => <HomeHeader onChangeText={onSearchTextChange} />,
     });
   }, []);
 
@@ -74,23 +53,31 @@ export const HomePage = ({navigation}: any) => {
       );
     });
   };
-  // when user enter text in search box, every item will be evaluated by their item.data.title property
+
   const onSearchTextChange = (text: string) => {
     if (!(!text || 0 === text.length)) {
+      dispatch(setImages({...imagesData, loading: true}));
       const filteredData = imagesData.images.filter(item => {
         return item.data.title.toLowerCase().includes(text.toLowerCase());
       });
-      dispatch(setImages({...imagesData, images: filteredData}));
+      dispatch(
+        setImages({...imagesData, images: filteredData, loading: false}),
+      );
     } else {
       getImageData();
     }
   };
+
   return (
     <SafeAreaView>
       <View>
         {imagesData.loading ? (
           <View style={{marginTop: windowHeight / 2}}>
             <ActivityIndicator size="large" />
+          </View>
+        ) : imagesData.images.length === 0 ? (
+          <View style={{marginTop: windowHeight / 2}}>
+            <Text style={{textAlign: 'center'}}>No Images Found</Text>
           </View>
         ) : (
           <ImageList imageData={imagesData.images} navigation={navigation} />

@@ -13,15 +13,13 @@ export const ImageDetailsPage = ({route, navigation}: any) => {
     navigation.setOptions({
       headerShown: true,
       headerTransparent: true,
-      headerStyle: {
-        backgroundColor: HEADER_BACKGROUND_COLOR,
-      },
-      headerTitle: 'Image Details',
+      headerTitle: 'Details',
       headerTitleStyle: {
         color: 'white',
         fontSize: 20,
         fontWeight: 'bold',
       },
+      headerTintColor: 'white',
     });
   }, []);
 
